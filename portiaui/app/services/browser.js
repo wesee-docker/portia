@@ -1,9 +1,11 @@
 import Ember from 'ember';
+import utils from '../utils/utils';
 
 
-export const DEFAULT_MODE = 'navigation';
+export const NAVIGATION_MODE = 'navigation';
 export const ANNOTATION_MODE = 'annotation';
 export const INTERACTION_MODES = new Set([ANNOTATION_MODE]);
+export const DEFAULT_MODE = NAVIGATION_MODE;
 
 export default Ember.Service.extend({
     backBuffer: [],
@@ -34,6 +36,7 @@ export default Ember.Service.extend({
 
     go(url) {
         const currentUrl = this.get('_url');
+        url = utils.cleanUrl(url);
         if (url && url !== currentUrl) {
             this.beginPropertyChanges();
             if (currentUrl) {
@@ -43,6 +46,7 @@ export default Ember.Service.extend({
             this.set('forwardBuffer', []);
             this.endPropertyChanges();
         }
+        //this.get('viewPort').loadUrl(url);
     },
 
     back() {
@@ -64,6 +68,7 @@ export default Ember.Service.extend({
     },
 
     reload() {
+        this.go(this.get('_url'));
     },
 
     setAnnotationMode() {
