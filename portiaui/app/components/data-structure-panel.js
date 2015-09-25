@@ -96,6 +96,7 @@ const DataStructurePanel = ToolPanel.extend({
             this.removeAnnotation(annotation);
         }
         this.set('_registeredAnnotations', []);
+        this.get('browser').clearAnnotationMode();
         this.endPropertyChanges();
     },
 

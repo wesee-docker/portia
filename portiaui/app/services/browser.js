@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import utils from '../utils/utils';
+import { cleanUrl } from '../utils/utils';
 
 
 export const NAVIGATION_MODE = 'navigation';
@@ -9,13 +9,23 @@ export const DEFAULT_MODE = NAVIGATION_MODE;
 
 export default Ember.Service.extend({
     backBuffer: [],
-    disabled: true,
     document: null,
     forwardBuffer: [],
     loading: false,
     mode: DEFAULT_MODE,
+    _disabled: true,
     _url: null,
 
+    disabled: Ember.computed('_disabled', 'mode', {
+        get() {
+            return this.get('_disabled') || this.get('mode') !== NAVIGATION_MODE;
+        },
+
+        set(key, value) {
+            this.set('_disabled', value);
+            return value || this.get('mode') !== NAVIGATION_MODE;
+        }
+    }),
     isInteractionMode: Ember.computed('mode', function() {
         return INTERACTION_MODES.has(this.get('mode'));
     }),
@@ -36,7 +46,7 @@ export default Ember.Service.extend({
 
     go(url) {
         const currentUrl = this.get('_url');
-        url = utils.cleanUrl(url);
+        url = cleanUrl(url);
         if (url && url !== currentUrl) {
             this.beginPropertyChanges();
             if (currentUrl) {
@@ -46,7 +56,6 @@ export default Ember.Service.extend({
             this.set('forwardBuffer', []);
             this.endPropertyChanges();
         }
-        //this.get('viewPort').loadUrl(url);
     },
 
     back() {
@@ -68,7 +77,7 @@ export default Ember.Service.extend({
     },
 
     reload() {
-        this.go(this.get('_url'));
+        this.notifyPropertyChange('_url');
     },
 
     setAnnotationMode() {
