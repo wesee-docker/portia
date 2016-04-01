@@ -27,11 +27,17 @@
         opacity: $icon-fade-opacity;
         transition: opacity $animation-time $animation-easing;
         text-align: center;
+
+        &.disabled {
+            cursor: not-allowed;
+        }
     }
 
     &:hover {
         .fa-pencil {
-            opacity: 1;
+            &:not(.disabled) {
+                opacity: 1;
+            }
         }
     }
 

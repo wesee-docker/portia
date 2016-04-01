@@ -1,7 +1,7 @@
-{{#tree-list}}
-    {{#tree-list-item hasChildren=true as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title project-listing"}}
+{{#tree-list as |list|}}
+    {{#list.item hasChildren=true as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title project-listing"}}
                 Project
                 {{#animation-container hide=(or (not versionControlled) (not project.hasChanges)) id="project-changes-info" class="inline project-changes" setHeight=false}}
                     Not published
@@ -27,27 +27,27 @@
                         </p>
                     {{/help-icon}}
                 {{/animation-container}}
-            {{/list-item-text}}
-        {{else if (eq options.section "subtrees")}}
-            {{#tree-list-item}}
-                {{#link-to 'projects.project' project}}
-                    {{list-item-icon icon='project'}}
-                    {{#list-item-text}}
+            {{/title-item.text}}
+        {{else if (eq title-item.section "subtrees")}}
+            {{#title-item.subtree.item model=project as |project-item|}}
+                {{#project-item.link 'projects.project' project}}
+                    {{project-item.icon icon='project'}}
+                    {{#project-item.text}}
                         {{project.name}}
-                    {{/list-item-text}}
+                    {{/project-item.text}}
                     {{#tooltip-container tooltipFor="project-publish-button" text="Publish project" tooltipContainer='body'}}
-                        {{list-item-icon id="project-publish-button" class=(if project.hasChanges 'active') icon='publish' action=(action 'publish')}}
+                        {{project-item.icon id="project-publish-button" class=(if project.hasChanges 'active') icon='publish' action=(action 'publish')}}
                     {{/tooltip-container}}
                     {{#tooltip-container tooltipFor="project-discard-button" text="Discard changes" tooltipContainer='body'}}
-                        {{list-item-icon id="project-discard-button" class=(if project.hasChanges 'active') icon='rollback' action=(action 'discard')}}
+                        {{project-item.icon id="project-discard-button" class=(if project.hasChanges 'active') icon='rollback' action=(action 'discard')}}
                     {{/tooltip-container}}
                     {{#tooltip-container tooltipFor="project-close-button" text="Close project" tooltipContainer='body'}}
-                        {{#link-to 'projects' id="project-close-button"}}
-                            {{list-item-icon icon='close'}}
-                        {{/link-to}}
+                        {{#project-item.link 'projects' id="project-close-button"}}
+                            {{project-item.icon icon='close'}}
+                        {{/project-item.link}}
                     {{/tooltip-container}}
-                {{/link-to}}
-            {{/tree-list-item}}
+                {{/project-item.link}}
+            {{/title-item.subtree.item}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}

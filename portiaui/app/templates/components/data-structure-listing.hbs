@@ -1,24 +1,24 @@
-{{#tree-list}}
-    {{#tree-list-item hasChildren=sample.items.length as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title"}}
+{{#tree-list as |list|}}
+    {{#list.item hasChildren=sample.items.length as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title"}}
                 Items
-            {{/list-item-text}}
-            {{list-item-icon icon='add' action=(action 'addItem' sample)}}
-        {{else if (eq options.section "subtrees")}}
+            {{/title-item.text}}
+            {{title-item.icon icon='add' action=(action 'addItem' sample)}}
+        {{else if (eq title-item.section "subtrees")}}
             {{#each sample.items as |item|}}
                 {{#unless item.itemAnnotation.parent}}
-                    {{#data-structure-annotations sample=sample item=item annotationColors=annotationColors}}
-                        {{#link-to 'projects.project.spider.sample.data.item' item}}
-                            {{list-item-icon icon='schema'}}
-                            {{list-item-badge value=(or item.itemAnnotation.elements.length 0)}}
-                            {{list-item-item-schema item=item selecting=(mut item.new)}}
-                            {{list-item-add-annotation-menu item=item}}
-                            {{list-item-icon icon='remove' action=(action 'removeItem' item) disabled=(lte sample.items.length 1) bubbles=false}}
-                        {{/link-to}}
-                    {{/data-structure-annotations}}
+                    {{#title-item.subtree.annotations-item sample=sample item=item annotationColors=annotationColors as |item-item|}}
+                        {{#item-item.link 'projects.project.spider.sample.data.item' item}}
+                            {{item-item.icon icon='schema'}}
+                            {{item-item.badge value=(or item.itemAnnotation.elements.length 0)}}
+                            {{item-item.item-schema selecting=(mut item.new)}}
+                            {{item-item.add-annotation-menu}}
+                            {{item-item.icon icon='remove' action=(action 'removeItem' item) disabled=(lte sample.items.length 1) bubbles=false}}
+                        {{/item-item.link}}
+                    {{/title-item.subtree.annotations-item}}
                 {{/unless}}
             {{/each}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}

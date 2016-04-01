@@ -1,24 +1,22 @@
 <nav id="side-bar">
     <div>
-        {{#tree-list}}
-            {{#tree-list-item hasChildren=conflictedFiles.length as |options|}}
-                {{#if (eq options.section "item")}}
-                    {{#list-item-text}}
+        {{#tree-list as |list|}}
+            {{#list.item hasChildren=conflictedFiles.length as |title-item|}}
+                {{#if (eq title-item.section "item")}}
+                    {{#title-item.text}}
                         Conflicted files
-                    {{/list-item-text}}
-                {{else if (eq options.section "subtrees")}}
+                    {{/title-item.text}}
+                {{else if (eq title-item.section "subtrees")}}
                     {{#each conflictedFiles as |file|}}
-                        {{#tree-list-item as |options|}}
-                            {{#if (eq options.section "item")}}
-                                {{#link-to 'projects.project.conflicts.conflict' file.encodedName }}
-                                    {{list-item-icon icon='file'}}
-                                    {{file.name}}
-                                {{/link-to}}
-                            {{/if}}
-                        {{/tree-list-item}}
+                        {{#title-item.subtree.item as |file-item|}}
+                            {{#file-item.link 'projects.project.conflicts.conflict' file.encodedName }}
+                                {{file-item.icon icon='file'}}
+                                {{file.name}}
+                            {{/file-item.link}}
+                        {{/title-item.subtree.item}}
                     {{/each}}
                 {{/if}}
-            {{/tree-list-item}}
+            {{/list.item}}
         {{/tree-list}}
     </div>
 </nav>

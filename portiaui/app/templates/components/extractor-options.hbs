@@ -1,41 +1,41 @@
-{{#tree-list class="extractor-options"}}
-    {{#tree-list-item hasChildren=true as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title"}}
+{{#tree-list class="extractor-options" as |list|}}
+    {{#list.item hasChildren=true as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title"}}
                 Extractors
-            {{/list-item-text}}
-            {{#list-item-icon-menu icon='add-dropdown' as |dropdown|}}
+            {{/title-item.text}}
+            {{#title-item.icon-menu icon='add-dropdown' as |dropdown|}}
                 {{#dropdown.header}}Add field type extractor{{/dropdown.header}}
                 {{#each types as |type|}}
                     {{#dropdown.item action=(chain-actions (action 'addTypeExtractor' type) dropdown.closeMenu) as |value|}}
-                        {{list-item-icon class="icon" icon=type}}{{type}}
+                        {{title-item.icon class="icon" icon=type}}{{type}}
                     {{/dropdown.item}}
                 {{/each}}
                 {{#dropdown.header}}Add regular expression extractor{{/dropdown.header}}
                 {{#each regexExtractors as |extractor|}}
                     {{#dropdown.item action=(chain-actions (action 'addRegexExtractor' extractor) dropdown.closeMenu) as |value|}}
-                        {{list-item-icon class="icon" icon="regular expression"}}{{extractor.value}}
+                        {{title-item.icon class="icon" icon="regular expression"}}{{extractor.value}}
                     {{/dropdown.item}}
                 {{/each}}
                 {{#dropdown.item action=(chain-actions (action 'addNewRegexExtractor') dropdown.closeMenu) as |value|}}
-                    {{list-item-icon class="icon" icon="add"}}New regular expression
+                    {{title-item.icon class="icon" icon="add"}}New regular expression
                 {{/dropdown.item}}
-            {{/list-item-icon-menu}}
-        {{else if (eq options.section "subtrees")}}
+            {{/title-item.icon-menu}}
+        {{else if (eq title-item.section "subtrees")}}
             {{#each annotation.extractors as |extractor|}}
-                {{#tree-list-item}}
+                {{#title-item.subtree.item model=extractor as |extractor-item|}}
                     {{#if (eq extractor.type 'type')}}
-                        {{list-item-icon icon=extractor.value}}
-                        {{#list-item-text}}
+                        {{extractor-item.icon icon=extractor.value}}
+                        {{#extractor-item.text}}
                             {{extractor.value}}
-                        {{/list-item-text}}
+                        {{/extractor-item.text}}
                     {{else if (eq extractor.type 'regex')}}
-                        {{list-item-icon icon='regular expression'}}
-                        {{list-item-editable value=(mut extractor.value) editing=(mut extractor.new) onChange=(action 'saveExtractor' extractor)}}
+                        {{extractor-item.icon icon='regular expression'}}
+                        {{extractor-item.editable value=(mut extractor.value) editing=(mut extractor.new) onChange=(action 'saveExtractor' extractor)}}
                     {{/if}}
-                    {{list-item-icon icon='remove' action=(action 'removeExtractor' extractor) bubbles=false}}
-                {{/tree-list-item}}
+                    {{extractor-item.icon icon='remove' action=(action 'removeExtractor' extractor) bubbles=false}}
+                {{/title-item.subtree.item}}
             {{/each}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}

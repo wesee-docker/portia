@@ -1,7 +1,7 @@
-{{#tree-list hide=currentSchema}}
-    {{#tree-list-item hasChildren=true as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title"}}
+{{#tree-list hide=currentSchema as |list|}}
+    {{#list.item hasChildren=true as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title"}}
                 Spider{{#animation-container class="inline" hide=currentSpider setHeight=false}}s{{/animation-container}}
                 {{#animation-container class="inline" setHeight=false}}
                     {{#help-icon}}
@@ -19,63 +19,65 @@
                         </p>
                     {{/help-icon}}
                 {{/animation-container}}
-            {{/list-item-text}}
+            {{/title-item.text}}
             {{#tooltip-container tooltipFor="add-spider-button" text=addSpiderTooltipText tooltipContainer='body'}}
-                {{list-item-icon id="add-spider-button" icon='add' disabled=(not canAddSpider) action=(action 'addSpider')}}
+                {{title-item.icon id="add-spider-button" icon='add' disabled=(not canAddSpider) action=(action 'addSpider')}}
             {{/tooltip-container}}
-        {{else if (eq options.section "subtrees")}}
-            {{#tree-list-item hide=(or project.spiders.isPending project.spiders.length) as |options|}}
-                {{#list-item-text class="text-center"}}
+        {{else if (eq title-item.section "subtrees")}}
+            {{#title-item.subtree.item hide=(or project.spiders.isPending project.spiders.length) as |none-item|}}
+                {{#none-item.text class="text-center"}}
                     This project has no spiders
-                {{/list-item-text}}
-            {{/tree-list-item}}
-            {{#tree-list-item hide=(or project.spiders.isPending project.spiders.length) class="help" as |options|}}
+                {{/none-item.text}}
+            {{/title-item.subtree.item}}
+            {{#title-item.subtree.item hide=(or project.spiders.isPending project.spiders.length) class="help"}}
                 <div class="alert alert-info" role="alert">
                     <p>
                         To create a spider first visit a web page that you would like to start
                         crawling from.
                     </p>
                 </div>
-            {{/tree-list-item}}
+            {{/title-item.subtree.item}}
             {{#each project.spiders as |spider|}}
-                {{#tree-list-item hide=(and currentSpider (not-eq spider currentSpider)) as |options|}}
-                    {{#link-to 'projects.project.spider' spider (query-params url=spider.startUrls.firstObject baseurl=null) current-when='projects.project.spider'}}
-                        {{list-item-icon icon='spider'}}
+                {{#title-item.subtree.item model=spider hide=(and currentSpider (not-eq spider currentSpider)) as |spider-item|}}
+                    {{#spider-item.link 'projects.project.spider' spider (query-params url=spider.startUrls.firstObject baseurl=null) current-when='projects.project.spider'}}
+                        {{spider-item.icon icon='spider'}}
                         {{#if currentSpider}}
-                            {{#list-item-text}}{{spider.name}}{{/list-item-text}}
+                            {{#spider-item.text}}
+                                {{spider.name}}
+                            {{/spider-item.text}}
                         {{else}}
-                            {{list-item-editable value=(mut spider.name) onChange=(action 'saveSpiderName' spider) validate=(action 'validateSpiderName')}}
+                            {{spider-item.editable value=(mut spider.name) onChange=(action 'saveSpiderName' spider) validate=(action 'validateSpiderName')}}
                         {{/if}}
                         {{#animation-container class="icon" setWidth=false setHeight=false}}
-                            {{list-item-icon icon='remove' action=(action 'removeSpider' spider) bubbles=false}}
+                            {{spider-item.icon icon='remove' action=(action 'removeSpider' spider) bubbles=false}}
                         {{/animation-container}}
                         {{#animation-container class="icon" hide=(not-eq spider currentSpider) setWidth=false setHeight=false}}
                             {{#tooltip-container tooltipFor=(concat "spider-options-button" (guid spider)) text="Advanced spider options" tooltipContainer='body'}}
-                                {{#link-to 'projects.project.spider' id=(concat "spider-options-button" (guid spider)) bubbles=false}}
-                                    {{#link-to 'projects.project.spider.options' bubbles=false class="ignore-active"}}
-                                        {{list-item-icon icon='options'}}
-                                    {{/link-to}}
-                                {{/link-to}}
+                                {{#spider-item.link 'projects.project.spider' id=(concat "spider-options-button" (guid spider)) bubbles=false}}
+                                    {{#spider-item.link 'projects.project.spider.options' bubbles=false class="ignore-active"}}
+                                        {{spider-item.icon icon='options'}}
+                                    {{/spider-item.link}}
+                                {{/spider-item.link}}
                             {{/tooltip-container}}
                         {{/animation-container}}
                         {{#animation-container class="icon" hide=(not-eq spider currentSpider) setWidth=false setHeight=false}}
                             {{#tooltip-container tooltipFor=(concat "spider-close-button" (guid spider)) text="Close spider" tooltipContainer='body'}}
-                                {{#link-to 'projects.project' id=(concat "spider-close-button" (guid spider)) bubbles=false}}
-                                    {{list-item-icon icon='close'}}
-                                {{/link-to}}
+                                {{#spider-item.link 'projects.project' id=(concat "spider-close-button" (guid spider)) bubbles=false}}
+                                    {{spider-item.icon icon='close'}}
+                                {{/spider-item.link}}
                             {{/tooltip-container}}
                         {{/animation-container}}
-                    {{/link-to}}
-                {{/tree-list-item}}
+                    {{/spider-item.link}}
+                {{/title-item.subtree.item}}
             {{/each}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}
 
-{{#tree-list hide=currentSpider}}
-    {{#tree-list-item hasChildren=true as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title"}}
+{{#tree-list hide=currentSpider as |list|}}
+    {{#list.item hasChildren=true as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title"}}
                 Data Format{{#animation-container class="inline" hide=currentSchema setHeight=false}}s{{/animation-container}}
                 {{#animation-container class="inline" setHeight=false}}
                     {{#help-icon}}
@@ -93,34 +95,34 @@
                         </p>
                     {{/help-icon}}
                 {{/animation-container}}
-            {{/list-item-text}}
+            {{/title-item.text}}
             {{#tooltip-container tooltipFor="add-schema-button" text="Create a new Schema" tooltipContainer='body'}}
-                {{list-item-icon id="add-schema-button" icon='add' action=(action 'addSchema')}}
+                {{title-item.icon id="add-schema-button" icon='add' action=(action 'addSchema')}}
             {{/tooltip-container}}
-        {{else if (eq options.section "subtrees")}}
-            {{#tree-list-item hide=(or project.schemas.isPending project.schemas.length) as |options|}}
-                {{#list-item-text class="text-center"}}
+        {{else if (eq title-item.section "subtrees")}}
+            {{#title-item.subtree.item hide=(or project.schemas.isPending project.schemas.length) as |none-item|}}
+                {{#none-item.text class="text-center"}}
                     This project has no data formats
-                {{/list-item-text}}
-            {{/tree-list-item}}
+                {{/none-item.text}}
+            {{/title-item.subtree.item}}
             {{#each project.schemas as |schema|}}
-                {{#tree-list-item hide=(and currentSchema (not-eq schema currentSchema)) as |options|}}
-                    {{#link-to 'projects.project.schema' schema}}
-                        {{list-item-icon icon='schema'}}
-                        {{list-item-editable value=(mut schema.name) editing=(mut schema.new) onChange=(action 'saveSchema' schema)}}
+                {{#title-item.subtree.item model=schema hide=(and currentSchema (not-eq schema currentSchema)) as |schema-item|}}
+                    {{#schema-item.link 'projects.project.schema' schema}}
+                        {{schema-item.icon icon='schema'}}
+                        {{schema-item.editable value=(mut schema.name) editing=(mut schema.new) onChange=(action 'saveSchema' schema)}}
                         {{#animation-container class="icon" setWidth=false setHeight=false}}
-                            {{list-item-icon icon='remove' disabled=(not (not schema.items.length)) action=(action 'removeSchema' schema) bubbles=false}}
+                            {{schema-item.icon icon='remove' disabled=(not (not schema.items.length)) action=(action 'removeSchema' schema) bubbles=false}}
                         {{/animation-container}}
                         {{#animation-container class="icon" hide=(not-eq schema currentSchema) setWidth=false setHeight=false}}
                             {{#tooltip-container tooltipFor=(concat "schema-close-button-" (guid schema)) text="Close schema" tooltipContainer='body'}}
-                                {{#link-to 'projects.project' id=(concat "schema-close-button-" (guid schema)) bubbles=false}}
-                                    {{list-item-icon icon='close'}}
-                                {{/link-to}}
+                                {{#schema-item.link 'projects.project' id=(concat "schema-close-button-" (guid schema)) bubbles=false}}
+                                    {{schema-item.icon icon='close'}}
+                                {{/schema-item.link}}
                             {{/tooltip-container}}
                         {{/animation-container}}
-                    {{/link-to}}
-                {{/tree-list-item}}
+                    {{/schema-item.link}}
+                {{/title-item.subtree.item}}
             {{/each}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}

@@ -10,5 +10,13 @@
                 padding-left: 0;
             }
         }
+
+        > .animation-content {
+            .tree-list {
+                > .animation-content {
+                    width: 100%;
+                }
+            }
+        }
     }
 }

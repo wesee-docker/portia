@@ -1,7 +1,7 @@
-{{#tree-list hide=currentSample}}
-    {{#tree-list-item hasChildren=true as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title"}}
+{{#tree-list hide=currentSample as |list|}}
+    {{#list.item hasChildren=true as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title"}}
                 Start Pages
                 {{#help-icon}}
                     Start Pages
@@ -19,61 +19,61 @@
                         Without a start page the spider cannot begin crawling.
                     </p>
                 {{/help-icon}}
-            {{/list-item-text}}
+            {{/title-item.text}}
             {{#tooltip-container tooltipFor="add-start-url-button" text="Start crawling from the current page" tooltipContainer='body'}}
-                {{list-item-icon id="add-start-url-button" icon='add' action=(action 'addStartUrl')}}
+                {{title-item.icon id="add-start-url-button" icon='add' action=(action 'addStartUrl')}}
             {{/tooltip-container}}
-        {{else if (eq options.section "subtrees")}}
-            {{#tree-list-item hide=spider.startUrls.length as |options|}}
-                {{#list-item-text class="text-center"}}
+        {{else if (eq title-item.section "subtrees")}}
+            {{#title-item.subtree.item hide=spider.startUrls.length as |none-item|}}
+                {{#none-item.text class="text-center"}}
                     This spider has no start pages
-                {{/list-item-text}}
-            {{/tree-list-item}}
-            {{#tree-list-item hide=spider.startUrls.length class="help" as |options|}}
+                {{/none-item.text}}
+            {{/title-item.subtree.item}}
+            {{#title-item.subtree.item hide=spider.startUrls.length class="help"}}
                 <div class="alert alert-warning" role="alert">
                     <p>
                         A spider needs at least one start page to start crawling from.
                     </p>
                 </div>
-            {{/tree-list-item}}
+            {{/title-item.subtree.item}}
             {{#each spider.startUrls key="@index" as |url|}}
                 {{#if (or (not newUrl) (not-eq urlValue url))}}
-                    {{project-structure-spider-url spider=spider url=url}}
+                    {{title-item.subtree.url-item spider=spider url=url}}
                 {{/if}}
             {{/each}}
             {{#if newUrl}}
-                {{project-structure-spider-url spider=spider url=urlValue urlAdded=(mut newUrl)}}
+                {{title-item.subtree.url-item spider=spider url=urlValue urlAdded=(mut newUrl)}}
             {{/if}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}
 
-{{#tree-list hide=currentSample}}
-    {{#tree-list-item hasChildren=true as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title"}}
+{{#tree-list hide=currentSample as |list|}}
+    {{#list.item hasChildren=true as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title"}}
                 Link Crawling
-            {{/list-item-text}}
-        {{else if (eq options.section "subtrees")}}
-            {{#tree-list-item as |options|}}
-                {{list-item-icon icon='link'}}
-                {{list-item-link-crawling spider=spider}}
+            {{/title-item.text}}
+        {{else if (eq title-item.section "subtrees")}}
+            {{#title-item.subtree.item model=spider as |crawling-item|}}
+                {{crawling-item.icon icon='link'}}
+                {{crawling-item.link-crawling}}
                 {{#if (not-eq spider.linksToFollow 'none')}}
-                    {{#link-to 'projects.project.spider' bubbles=false}}
-                        {{#link-to 'projects.project.spider.link-options' bubbles=false class="ignore-active"}}
-                            {{list-item-icon icon='options'}}
-                        {{/link-to}}
-                    {{/link-to}}
+                    {{#crawling-item.link 'projects.project.spider' bubbles=false}}
+                        {{#crawling-item.link 'projects.project.spider.link-options' bubbles=false class="ignore-active"}}
+                            {{crawling-item.icon icon='options'}}
+                        {{/crawling-item.link}}
+                    {{/crawling-item.link}}
                 {{/if}}
-            {{/tree-list-item}}
+            {{/title-item.subtree.item}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}
 
-{{#tree-list}}
-    {{#tree-list-item hasChildren=true as |options|}}
-        {{#if (eq options.section "item")}}
-            {{#list-item-text class="title"}}
+{{#tree-list as |list|}}
+    {{#list.item hasChildren=true as |title-item|}}
+        {{#if (eq title-item.section "item")}}
+            {{#title-item.text class="title"}}
                 Sample Page{{#animation-container class="inline" hide=currentSample setHeight=false}}s{{/animation-container}}
                 {{#animation-container class="inline" setHeight=false}}
                     {{#help-icon}}
@@ -92,42 +92,42 @@
                         </p>
                     {{/help-icon}}
                 {{/animation-container}}
-            {{/list-item-text}}
+            {{/title-item.text}}
             {{#tooltip-container tooltipFor="add-sample-button" text="Create a new sample from the current page" tooltipContainer='body'}}
-                {{list-item-icon id="add-sample-button" icon='add' disabled=(not canAddSample) action=(action 'addSample')}}
+                {{title-item.icon id="add-sample-button" icon='add' disabled=(not canAddSample) action=(action 'addSample')}}
             {{/tooltip-container}}
-        {{else if (eq options.section "subtrees")}}
-            {{#tree-list-item hide=(or spider.samples.isPending spider.samples.length) as |options|}}
-                {{#list-item-text class="text-center"}}
+        {{else if (eq title-item.section "subtrees")}}
+            {{#title-item.subtree.item hide=(or spider.samples.isPending spider.samples.length) as |none-item|}}
+                {{#none-item.text class="text-center"}}
                     This spider has no sample pages
-                {{/list-item-text}}
-            {{/tree-list-item}}
-            {{#tree-list-item hide=(or spider.samples.isPending spider.samples.length) class="help" as |options|}}
+                {{/none-item.text}}
+            {{/title-item.subtree.item}}
+            {{#title-item.subtree.item hide=(or spider.samples.isPending spider.samples.length) class="help"}}
                 <div class="alert alert-info" role="alert">
                     <p>
                         Navigate to a web page that has the data you need, and create a new sample
                         page to begin annotating the data.
                     </p>
                 </div>
-            {{/tree-list-item}}
+            {{/title-item.subtree.item}}
             {{#each spider.samples as |sample|}}
-                {{#tree-list-item hide=(and currentSample (not-eq sample currentSample)) as |options|}}
-                    {{#link-to 'projects.project.spider.sample' sample (query-params url=sample.url baseurl=null) current-when='projects.project.spider.sample'}}
-                        {{list-item-icon icon='sample'}}
-                        {{list-item-editable value=(mut sample.name) editing=(mut sample.new) onChange=(action 'saveSample' sample)}}
+                {{#title-item.subtree.item model=sample hide=(and currentSample (not-eq sample currentSample)) as |sample-item|}}
+                    {{#sample-item.link 'projects.project.spider.sample' sample (query-params url=sample.url baseurl=null) current-when='projects.project.spider.sample'}}
+                        {{sample-item.icon icon='sample'}}
+                        {{sample-item.editable value=(mut sample.name) editing=(mut sample.new) onChange=(action 'saveSample' sample)}}
                         {{#animation-container class="icon" setWidth=false setHeight=false}}
-                            {{list-item-icon icon='remove' action=(action 'removeSample' sample) bubbles=false}}
+                            {{sample-item.icon icon='remove' action=(action 'removeSample' sample) bubbles=false}}
                         {{/animation-container}}
                         {{#animation-container class="icon" hide=(not-eq sample currentSample) setWidth=false setHeight=false}}
                             {{#tooltip-container tooltipFor=(concat "sample-close-button" (guid sample)) text="Close sample" tooltipContainer='body'}}
-                                {{#link-to 'projects.project.spider' id=(concat "sample-close-button" (guid sample)) bubbles=false}}
-                                    {{list-item-icon icon='close'}}
-                                {{/link-to}}
+                                {{#sample-item.link 'projects.project.spider' id=(concat "sample-close-button" (guid sample)) bubbles=false}}
+                                    {{sample-item.icon icon='close'}}
+                                {{/sample-item.link}}
                             {{/tooltip-container}}
                         {{/animation-container}}
-                    {{/link-to}}
-                {{/tree-list-item}}
+                    {{/sample-item.link}}
+                {{/title-item.subtree.item}}
             {{/each}}
         {{/if}}
-    {{/tree-list-item}}
+    {{/list.item}}
 {{/tree-list}}

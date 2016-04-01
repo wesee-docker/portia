@@ -1,10 +1,21 @@
 <div class="animation-content">
     {{#tree-list-item-row onMouseEnter=onMouseEnter onMouseLeave=onMouseLeave}}
-        {{yield (hash section="item")}}
+        {{yield (hash section="item"
+                      link=(component 'link-to' disabled=modelDeleted)
+                      icon=(component 'list-item-icon' model=model)
+                      icon-menu=(component 'list-item-icon-menu' model=model)
+                      badge=(component 'list-item-badge')
+                      text=(component 'list-item-text' model=model)
+                      editable=(component 'list-item-editable' model=model)
+                      add-annotation-menu=(component 'list-item-add-annotation-menu' item=model)
+                      field-type=(component 'list-item-field-type' field=model)
+                      item-schema=(component 'list-item-item-schema' item=model)
+                      annotation-field=(component 'list-item-annotation-field' annotation=model)
+                      link-crawling=(component 'list-item-link-crawling' spider=model))}}
     {{/tree-list-item-row}}
     {{#if hasChildren}}
-        {{#tree-list}}
-            {{yield (hash section="subtrees")}}
+        {{#tree-list as |list|}}
+            {{yield (hash section="subtrees" subtree=list)}}
         {{/tree-list}}
     {{/if}}
 </div>

@@ -1,3 +1,5 @@
 <ul class="animation-content">
-    {{yield}}
+    {{yield (hash item=(component 'tree-list-item')
+                  url-item=(component 'project-structure-spider-url')
+                  annotations-item=(component 'data-structure-annotations'))}}
 </ul>

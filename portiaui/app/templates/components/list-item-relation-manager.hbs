@@ -1,4 +1,4 @@
-{{#list-item-combo value=(mut value.content) valueAttribute='name' selecting=(mut selecting) orderItemsForSearch=orderItemsForSearch valuesEqual=valuesEqual onChange=onChange autoSelect=true menuContainer="body" as |combo|}}
+{{#list-item-combo model=model value=(mut value.content) valueAttribute='name' selecting=(mut selecting) orderItemsForSearch=orderItemsForSearch valuesEqual=valuesEqual onChange=onChange autoSelect=true menuContainer="body" as |combo|}}
     {{#combo.header}}
         {{yield (hash section='change-header')}}
     {{/combo.header}}

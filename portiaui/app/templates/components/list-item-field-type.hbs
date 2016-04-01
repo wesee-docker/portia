@@ -1,4 +1,4 @@
-{{#list-item-selectable value=(mut field.type) onChange=(action 'saveField') menuContainer="body" menuAlign="right" as |select|}}
+{{#list-item-selectable model=field value=(mut field.type) onChange=(action 'saveField') menuContainer="body" menuAlign="right" as |select|}}
     {{#if hasBlock}}
         {{#select.header}}
             {{yield}}

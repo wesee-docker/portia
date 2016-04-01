@@ -3,6 +3,12 @@
     cursor: pointer;
 }
 
+a {
+    &[disabled] {
+        cursor: not-allowed;
+    }
+}
+
 .ignore-active {
     &.active {
        pointer-events: none;

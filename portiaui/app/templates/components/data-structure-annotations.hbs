@@ -1,34 +1,34 @@
-{{#tree-list-item hasChildren=item.annotations.length onMouseEnter=(action 'enterItem' item) onMouseLeave=(action 'leaveItem' item) as |options|}}
-    {{#if (eq options.section "item")}}
-        {{yield}}
-    {{else if (eq options.section "subtrees")}}
+{{#tree-list-item model=item hasChildren=item.annotations.length onMouseEnter=(action 'enterItem' item) onMouseLeave=(action 'leaveItem' item) as |item-item|}}
+    {{#if (eq item-item.section "item")}}
+        {{yield item-item}}
+    {{else if (eq item-item.section "subtrees")}}
         {{#each item.annotations as |annotation|}}
             {{#if (eq annotation.constructor.modelName "annotation")}}
-                {{#tree-list-item onMouseEnter=(action 'enterAnnotation' annotation) onMouseLeave=(action 'leaveAnnotation' item) as |options|}}
-                    {{#link-to 'projects.project.spider.sample.data.annotation' annotation}}
-                        {{list-item-icon icon=annotation.type}}
-                        {{list-item-badge value=(or annotation.elements.length 0) color=(array-get annotationColors annotation.orderedIndex)}}
-                        {{list-item-annotation-field annotation=annotation selecting=(mut annotation.new)}}
-                        {{#list-item-field-type field=annotation.field}}
+                {{#item-item.subtree.item model=annotation onMouseEnter=(action 'enterAnnotation' annotation) onMouseLeave=(action 'leaveAnnotation' item) as |annotation-item|}}
+                    {{#annotation-item.link 'projects.project.spider.sample.data.annotation' annotation}}
+                        {{annotation-item.icon icon=annotation.type}}
+                        {{annotation-item.badge value=(or annotation.elements.length 0) color=(array-get annotationColors annotation.orderedIndex)}}
+                        {{annotation-item.annotation-field selecting=(mut annotation.new)}}
+                        {{#annotation-item.field-type field=annotation.field}}
                             Change type of selected field
-                        {{/list-item-field-type}}
-                        {{#link-to 'projects.project.spider.sample.data.annotation.options' annotation bubbles=false class="ignore-active"}}
-                            {{list-item-icon icon='options'}}
-                        {{/link-to}}
-                        {{list-item-icon icon='remove' action=(action 'removeAnnotation' annotation) bubbles=false}}
-                    {{/link-to}}
-                {{/tree-list-item}}
+                        {{/annotation-item.field-type}}
+                        {{#annotation-item.link 'projects.project.spider.sample.data.annotation.options' annotation bubbles=false class="ignore-active"}}
+                            {{annotation-item.icon icon='options'}}
+                        {{/annotation-item.link}}
+                        {{annotation-item.icon icon='remove' action=(action 'removeAnnotation' annotation) bubbles=false}}
+                    {{/annotation-item.link}}
+                {{/item-item.subtree.item}}
             {{else if (eq annotation.constructor.modelName "item-annotation")}}
-                {{#data-structure-annotations sample=sample item=annotation.item annotationColors=annotationColors}}
-                    {{#link-to 'projects.project.spider.sample.data.item' annotation.item}}
-                        {{list-item-icon icon='schema'}}
-                        {{list-item-badge value=(or annotation.elements.length 0)}}
-                        {{list-item-editable value=(mut annotation.name) editing=(mut annotation.new) onChange=(action 'saveItemAnnotation' annotation)}}
-                        {{list-item-item-schema item=annotation.item.content}}
-                        {{list-item-add-annotation-menu item=annotation.item}}
-                        {{list-item-icon icon='remove' action=(action 'removeItemAnnotation' annotation) bubbles=false}}
-                    {{/link-to}}
-                {{/data-structure-annotations}}
+                {{#item-item.subtree.annotations-item sample=sample item=annotation.item annotationColors=annotationColors as |nested-item|}}
+                    {{#nested-item.link 'projects.project.spider.sample.data.item' annotation.item}}
+                        {{nested-item.icon icon='schema'}}
+                        {{nested-item.badge value=(or annotation.elements.length 0)}}
+                        {{nested-item.editable value=(mut annotation.name) editing=(mut annotation.new) onChange=(action 'saveItemAnnotation' annotation)}}
+                        {{nested-item.item-schema item=annotation.item.content}}
+                        {{nested-item.add-annotation-menu}}
+                        {{nested-item.icon icon='remove' action=(action 'removeItemAnnotation' annotation) bubbles=false}}
+                    {{/nested-item.link}}
+                {{/item-item.subtree.annotations-item}}
             {{/if}}
         {{/each}}
     {{/if}}

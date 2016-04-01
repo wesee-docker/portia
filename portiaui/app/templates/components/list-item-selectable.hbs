@@ -14,7 +14,7 @@
             {{value}}
         {{/if}}
     </span>
-    <a {{action 'startSelecting'}}>
+    <a {{action 'startSelecting'}} disabled={{model.isDeleted}}>
         <span class="caret"></span>
     </a>
 {{/if}}

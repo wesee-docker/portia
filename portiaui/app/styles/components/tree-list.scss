@@ -17,6 +17,12 @@
 
 .tree-list-item {
     display: block;
+    opacity: 1;
+    transition: opacity $animation-time $animation-easing;
+
+    &.model-deleted {
+        opacity: .5;
+    }
 
     > .animation-content {
         width: 100%;
@@ -41,10 +47,17 @@
         flex: 1 1 auto;
         display: block;
         outline: none;
+        transition: color $animation-time $animation-easing;
 
         &:hover,
         &:focus {
             text-decoration: none;
+        }
+
+        .model-deleted &,
+        .model-deleted &:hover,
+        .model-deleted &:focus {
+            color: $navbar-default-color;
         }
 
         &:before {

@@ -4,6 +4,7 @@ export default Ember.Component.extend({
     classNames: ['list-item-editable'],
     classNameBindings: ['editing'],
 
+    model: null,
     editing: false,
     onChange: null,
     validate: null,

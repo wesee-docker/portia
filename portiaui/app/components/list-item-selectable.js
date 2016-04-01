@@ -4,6 +4,7 @@ export default Ember.Component.extend({
     classNames: ['list-item-selectable'],
     classNameBindings: ['selecting'],
 
+    model: null,
     change: null,
     choices: [],
     buttonClass: null,
@@ -16,7 +17,9 @@ export default Ember.Component.extend({
 
     actions: {
         startSelecting() {
-            this.set('selecting', true);
+            if (!this.get('model.isDeleted')) {
+                this.set('selecting', true);
+            }
         }
     }
 });

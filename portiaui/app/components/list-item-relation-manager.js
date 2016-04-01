@@ -4,6 +4,7 @@ import { ensurePromise } from '../utils/promises';
 export default Ember.Component.extend({
     tagName: '',
 
+    model: null,
     onChange: null,
     choices: [],
     selecting: false,

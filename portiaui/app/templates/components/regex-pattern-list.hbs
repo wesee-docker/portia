@@ -1,16 +1,15 @@
-{{#tree-list}}
-    {{#if list.length}}
-        {{#each list as |item index|}}
-            {{#tree-list-item hasChildren=spider.startUrls.length as |options|}}
-                {{list-item-editable value=item spellcheck=false onChange=(action 'changePattern' index)}}
-                {{list-item-icon icon='remove' action=(action 'removePattern' index)}}
-            {{/tree-list-item}}
-        {{/each}}
-    {{else}}
-        {{#tree-list-item hasChildren=spider.startUrls.length as |options|}}
+{{#tree-list as |tree-list|}}
+    {{#tree-list.item hide=list.length as |none-item|}}
+        {{#none-item.text class="text-center"}}
             No patterns defined
-        {{/tree-list-item}}
-    {{/if}}
+        {{/none-item.text}}
+    {{/tree-list.item}}
+    {{#each list as |item index|}}
+        {{#tree-list.item as |regex-item|}}
+            {{regex-item.editable value=item spellcheck=false onChange=(action 'changePattern' index)}}
+            {{regex-item.icon icon='remove' action=(action 'removePattern' index)}}
+        {{/tree-list.item}}
+    {{/each}}
 {{/tree-list}}
 <div class="form-group new-pattern {{if (not newPatternCorrect) 'has-error'}}">
     <div>
