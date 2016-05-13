@@ -423,6 +423,46 @@ export const BaseSelectorGenerator = Ember.Object.extend({
 
     getElementIndices(elements) {
         return Array.from(new Set(elements.map(positionInParent))).sort((a, b) => a - b);
+    },
+
+    generalizationDistance(element) {
+        const paths = this.get('paths');
+        const groupedPaths = this.get('groupedPaths');
+        const newPath = elementPath(element);
+        const newGroupedPaths = this.groupPaths([newPath].concat(paths));
+
+        if (newGroupedPaths.length > groupedPaths.length) {
+            return Infinity;
+        }
+
+        const group = newGroupedPaths.find(group => group[0] === newPath);
+        const pathLength = group[0].length;
+        let distance = 0;
+        let i = 0;
+        const rejectElements = element => element === newPath[i];
+        for (i = 0; i < pathLength; i++) {
+            const elements = this.getGroupElementsAtIndex(group, i);
+            if (elements.length === 1) {
+                continue;
+            }
+            const currentElements = elements.reject(rejectElements);
+            const newClassSelectors = this.getElementClassSelectors(elements);
+            const currentClassSelectors = this.getElementClassSelectors(currentElements);
+            if (currentClassSelectors.length > newClassSelectors.length) {
+                if (newClassSelectors.length >= 1 &&
+                        (currentClassSelectors.length - newClassSelectors.length === 1)) {
+                    distance++;
+                } else {
+                    return Infinity;
+                }
+            }
+            const newIndices = this.getElementIndices(elements);
+            const currentIndices = this.getElementIndices(currentElements);
+            if (currentIndices.length < newIndices.length) {
+                distance++;
+            }
+        }
+        return distance;
     }
 });
 
@@ -497,46 +537,6 @@ export const AnnotationSelectorGenerator = BaseSelectorGenerator.extend({
             const allowedSelectors = this.createSelectors([paths]);
             return allowedSelectors[0];
         });
-    },
-
-    generalizationDistance(element) {
-        const paths = this.get('paths');
-        const groupedPaths = this.get('groupedPaths');
-        const newPath = elementPath(element);
-        const newGroupedPaths = this.groupPaths([newPath].concat(paths));
-
-        if (newGroupedPaths.length > groupedPaths.length) {
-            return Infinity;
-        }
-
-        const group = newGroupedPaths.find(group => group[0] === newPath);
-        const pathLength = group[0].length;
-        let distance = 0;
-        let i = 0;
-        const rejectElements = element => element === newPath[i];
-        for (i = 0; i < pathLength; i++) {
-            const elements = this.getGroupElementsAtIndex(group, i);
-            if (elements.length === 1) {
-                continue;
-            }
-            const currentElements = elements.reject(rejectElements);
-            const newClassSelectors = this.getElementClassSelectors(elements);
-            const currentClassSelectors = this.getElementClassSelectors(currentElements);
-            if (currentClassSelectors.length > newClassSelectors.length) {
-                if (newClassSelectors.length >= 1 &&
-                        (currentClassSelectors.length - newClassSelectors.length === 1)) {
-                    distance++;
-                } else {
-                    return Infinity;
-                }
-            }
-            const newIndices = this.getElementIndices(elements);
-            const currentIndices = this.getElementIndices(currentElements);
-            if (currentIndices.length < newIndices.length) {
-                distance++;
-            }
-        }
-        return distance;
     }
 });
 
@@ -877,6 +877,36 @@ export function makeItemsFromGroups(groups) {
         }
     }
     return items;
+}
+
+export function createSelectorGenerators(structure, selectorMatcher) {
+    const accumulator = [];
+    accumulateSelectorGenerators(structure, selectorMatcher, accumulator);
+    return accumulator;
+}
+
+function accumulateSelectorGenerators(structure, selectorMatcher, accumulator) {
+    const generators = [];
+
+    for (let element of structure) {
+        const {annotation, children} = element;
+        let selectorGenerator;
+        if (children) {
+            selectorGenerator = ContainerSelectorGenerator.create({});
+            selectorGenerator.addChildren(
+                accumulateSelectorGenerators(children, selectorMatcher, accumulator));
+
+        } else {
+            selectorGenerator = AnnotationSelectorGenerator.create({
+                selectorMatcher,
+                annotation
+            });
+        }
+        generators.push(selectorGenerator);
+        accumulator.push([annotation, selectorGenerator]);
+    }
+
+    return generators;
 }
 
 export default {
