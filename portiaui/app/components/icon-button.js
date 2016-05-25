@@ -18,6 +18,7 @@ export const ICON_CLASSES = {
     navigation: 'fa fa-eye',
     number: 'portia-icon portia-icon-number',
     options: 'structure-list-details fa fa-cog',
+    ok: 'structure-list-publish fa fa-check-circle',
     price: 'fa fa-dollar',
     project: 'fa fa-folder',
     'raw html': 'fa fa-code',
@@ -37,7 +38,8 @@ export const ICON_CLASSES = {
     'tool-remove': 'fa fa-minus',
     'tool-multiple': 'fa fa-th-large',
     url: 'fa fa-globe',
-    warning: 'structure-list-warning fa fa-exclamation-circle'
+    warning: 'structure-list-warning fa fa-exclamation-circle',
+    'warning-triangle': 'structure-list-warning fa fa-exclamation-triangle',
 };
 
 export default Ember.Component.extend({

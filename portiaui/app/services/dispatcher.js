@@ -143,6 +143,7 @@ export default Ember.Service.extend({
         const name = Sample.normalizeTitle(this.get('browser.document').title);
         const sample = store.createRecord('sample', {
             name,
+            body: 'original_body',
             url,
             spider
         });
