@@ -18,6 +18,7 @@ export const ICON_CLASSES = {
     navigation: 'fa fa-eye',
     number: 'portia-icon portia-icon-number',
     options: 'structure-list-details fa fa-cog',
+    play: 'structure-list-play fa fa-play-circle',
     price: 'fa fa-dollar',
     project: 'fa fa-folder',
     'raw html': 'fa fa-code',

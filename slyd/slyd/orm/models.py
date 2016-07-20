@@ -392,7 +392,10 @@ class Sample(Model, OrderedAnnotationsMixin):
                 container_id = item['container_id'] = parent['container_id']
                 item['repeated_selector'] = item['selector']
                 item['selector'] = parent['selector']
-                item['siblings'] = parent['siblings'] or item['siblings']
+                try:
+                    item['siblings'] = parent['siblings'] or item['siblings']
+                except KeyError:
+                    item['siblings'] = 0
                 item['schema_id'] = parent['schema_id'] or item['schema_id']
                 if container_id:
                     containers[container_id]['children'].remove(parent)
