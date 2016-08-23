@@ -335,7 +335,7 @@ class Model(with_metaclass(ModelMeta)):
     def rollback(self):
         self.data_store.clear_snapshot('working')
 
-    def save(self, only=None):
+    def save(self, only=None, force=False):
         if self.storage is None:
             return
 
@@ -347,7 +347,7 @@ class Model(with_metaclass(ModelMeta)):
         self._stage_changes(only)
         # now that all changes are staged we can save from the staged and
         # committed snapshots to get a consistent save of the selected fields
-        self._commit_changes()
+        self._commit_changes(force=force)
 
     def _stage_changes(self, only=None):
         store = self.data_store
@@ -371,7 +371,8 @@ class Model(with_metaclass(ModelMeta)):
                 related_store.update_snapshot(
                     'staged', ('working', 'committed'), fields=[field])
 
-    def _commit_changes(self, saved_paths=None, deleted_paths=None):
+    def _commit_changes(self, saved_paths=None, deleted_paths=None,
+                        force=False):
         if saved_paths is None:
             saved_paths = set()
         if deleted_paths is None:
@@ -384,7 +385,7 @@ class Model(with_metaclass(ModelMeta)):
             path = model.storage_path(model, snapshots=('staged', 'committed'))
             old_path = model.storage_path(model,
                                           snapshots=('committed', 'staged'))
-            if dirty or old_path != path:
+            if force or dirty or old_path != path:
                 if path not in saved_paths and path not in deleted_paths:
                     to_save = self._get_object_to_dump(
                         model, parent_snapshots=('staged', 'committed'))
